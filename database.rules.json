@@ -1,0 +1,6 @@
+{
+  "rules": {
+    "users": { "$uid": { ".read": "auth.uid === $uid", ".write": "auth.uid === $uid" } },
+    "mcpServers": { "$uid": { ".read": "auth.uid === $uid", ".write": "auth.uid === $uid" } }
+  }
+}

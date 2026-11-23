@@ -1,0 +1,7 @@
+node_modules
+dist
+.git
+.env
+serviceAccount*.json
+*.md
+.github
