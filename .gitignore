@@ -4,3 +4,4 @@ dist
 serviceAccount*.json
 *.tsbuildinfo
 docref
+firebase-debug.log

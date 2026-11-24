@@ -8,6 +8,7 @@
     "start:dev": "nest start --watch",
     "start:prod": "node dist/main",
     "typecheck": "tsc --noEmit",
+    "get-token": "node scripts/get-token.js",
     "migrate": "nest build && node dist/migrations/run.js",
     "migrate:dry": "nest build && node dist/migrations/run.js --dry-run"
   },
