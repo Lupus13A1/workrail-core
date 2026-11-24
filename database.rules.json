@@ -1,6 +1,88 @@
 {
   "rules": {
-    "users": { "$uid": { ".read": "auth.uid === $uid", ".write": "auth.uid === $uid" } },
-    "mcpServers": { "$uid": { ".read": "auth.uid === $uid", ".write": "auth.uid === $uid" } }
+    ".read": false,
+    ".write": false,
+
+    "_meta": { ".read": false, ".write": false },
+
+    "users": {
+      ".indexOn": ["email"],
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+
+    "access_tokens": {
+      ".indexOn": ["userId", "orgId", "agentId"]
+    },
+
+    "org_invites": {
+      ".indexOn": ["orgId", "email"]
+    },
+
+    "mcpServers": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+
+    "orgs": {
+      "$orgId": {
+        "info": {
+          ".read": "auth != null && root.child('orgs').child($orgId).child('members').child(auth.uid).child('status').val() === 'active'"
+        },
+        "members": {
+          ".read": "auth != null && root.child('orgs').child($orgId).child('members').child(auth.uid).child('status').val() === 'active'",
+          ".indexOn": ["role", "status"]
+        },
+        "agent_accounts": {
+          ".read": "auth != null && root.child('orgs').child($orgId).child('members').child(auth.uid).child('status').val() === 'active'",
+          ".indexOn": ["name", "ownerUserId"]
+        },
+        "agent_runs": {
+          ".read": "auth != null && root.child('orgs').child($orgId).child('members').child(auth.uid).child('status').val() === 'active'",
+          "$agentId": { ".indexOn": ["at", "targetKey"] }
+        },
+        "projects": {
+          ".read": "auth != null && root.child('orgs').child($orgId).child('members').child(auth.uid).child('status').val() === 'active'",
+          ".indexOn": ["slug", "updatedAt"]
+        },
+        "issues": {
+          ".read": "auth != null && root.child('orgs').child($orgId).child('members').child(auth.uid).child('status').val() === 'active'",
+          "$projectKey": { ".indexOn": ["status", "assigneeId", "sprint", "parent", "rank", "updatedAt"] }
+        },
+        "issue_comments": {
+          ".read": "auth != null && root.child('orgs').child($orgId).child('members').child(auth.uid).child('status').val() === 'active'",
+          "$issueKey": { ".indexOn": ["createdAt"] }
+        },
+        "issue_attachments": {
+          ".read": "auth != null && root.child('orgs').child($orgId).child('members').child(auth.uid).child('status').val() === 'active'",
+          "$issueKey": { ".indexOn": ["createdAt"] }
+        },
+        "issue_history": {
+          ".read": "auth != null && root.child('orgs').child($orgId).child('members').child(auth.uid).child('status').val() === 'active'",
+          "$issueKey": { ".indexOn": ["at"] }
+        },
+        "sprints": {
+          ".read": "auth != null && root.child('orgs').child($orgId).child('members').child(auth.uid).child('status').val() === 'active'",
+          "$projectKey": { ".indexOn": ["status", "start"] }
+        },
+        "project_docs": {
+          ".read": "auth != null && root.child('orgs').child($orgId).child('members').child(auth.uid).child('status').val() === 'active'"
+        },
+        "releases": {
+          ".read": "auth != null && root.child('orgs').child($orgId).child('members').child(auth.uid).child('status').val() === 'active'",
+          "$projectKey": { ".indexOn": ["state", "targetDate"] }
+        },
+        "inbox": {
+          "$uid": {
+            ".read": "auth != null && auth.uid === $uid && root.child('orgs').child($orgId).child('members').child(auth.uid).child('status').val() === 'active'",
+            ".indexOn": ["at", "read"]
+          }
+        }
+      }
+    }
   }
 }

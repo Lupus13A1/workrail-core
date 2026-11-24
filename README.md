@@ -86,6 +86,12 @@ admin.auth().setCustomUserClaims('<uid>', { role: 'admin' })
 | Method | Path | สิทธิ์ | คำอธิบาย |
 |---|---|---|---|
 | GET | `/api/health` | public | ตรวจสถานะ |
+| POST | `/api/auth/register` | public | สมัคร Email/Password `{ email, password, firstName, lastName, orgName? }` หรือ `{ idToken, firstName, lastName }` |
+| POST | `/api/auth/login` | public | เข้าสู่ระบบ Email/Password `{ email, password }` → `tokens` |
+| POST | `/api/auth/google` | public | Google login/สมัคร `{ idToken }` (Firebase) หรือ `{ googleIdToken }` / `{ googleAccessToken }` |
+| POST | `/api/auth/session` | public | ซิงก์ Firebase ID token จาก client SDK `{ idToken }` |
+| POST | `/api/auth/refresh` | public | ต่ออายุ token `{ refreshToken }` |
+| POST | `/api/auth/logout` | login | เพิกถอน refresh tokens |
 | GET | `/api/auth/me` | login | ข้อมูลผู้ใช้จาก token |
 | POST | `/api/auth/role` | admin | ตั้ง role `{ "uid", "role" }` |
 | GET / PATCH | `/api/users/me` | login | โปรไฟล์ของตัวเอง |
